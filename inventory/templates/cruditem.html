@@ -1,0 +1,13 @@
+<form method="POST" enctype="multipart/form-data" class="form-controler">
+    {% csrf_token %}
+    {{ form }}
+    <h1>{{title}}</h1>
+    {% if pk %}
+    <button type="submit" class="btn btn-primary">EDIT</button>
+    <a href="{% url 'delete_item' pk %}"> delete</a>
+    
+    {%else%}
+    <button type="submit" class="btn btn-primary">ADD</button>
+    {%endif%}
+</form>
+    

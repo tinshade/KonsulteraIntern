@@ -1,8 +1,0 @@
-landing
-{% if user.profile.usertype == 'User' %}
-<h1> I am just an User </h1>
-{% else %}
-<h1> I am just an Admin </h1>
-{% endif %}
-
-<a class="btn btn-danger ml-auto nav-link" href="{% url 'logout' %}" title="Logout!">Logout<i class="fas fa-sign-out-alt"></i></a>

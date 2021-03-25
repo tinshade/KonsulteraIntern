@@ -122,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 #Login Variables
-LOGIN_REDIRECT_URL = 'profile'
+LOGIN_REDIRECT_URL = 'listing'
 LOGIN_URL = 'login'
 
 #Media Variables

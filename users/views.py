@@ -25,3 +25,9 @@ def register(request):
 @login_required
 def profile(request):
     return render(request, 'landing.html', {'title': 'Profile'})
+
+def add_product(request):
+    context={
+        "title":"Konsultera | Add Product"
+    }
+    return render(request, 'additem.html', context)

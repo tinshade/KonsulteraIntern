@@ -1,0 +1,27 @@
+<h1>Welcome, {{user.username}}!</h1>
+{% if user.profile.usertype == 'User' %}
+<h1> I am just an User </h1>
+{% else %}
+<h1> I am just an Admin </h1>
+{% endif %}
+<a class='btn btn-info' href="{% url 'add_item' %}" title="Add a new product!">Add Product</a>
+{%if messages %}
+{% for message in messages %}
+{{message}}
+{% endfor%}
+{% endif%}
+
+<a class="btn btn-danger ml-auto nav-link" href="{% url 'logout' %}" title="Logout!">Logout<i class="fas fa-sign-out-alt"></i></a>
+<section id="listing_products">
+    {{title}}
+    {% for product in products %}
+    
+    {{product.product_name}}
+    {{product.product_owner}}
+    {{product.product_quantity}}
+    {{product.product_price}}
+    <img src={{product.product_image.url}}/>
+    <a href="{% url 'edit_item' product.pk %}" title="edit">Edit</a>
+    <a href="{% url 'delete_item' product.pk %}" title="delete">Delete</a>
+    {% endfor %}
+</section>
