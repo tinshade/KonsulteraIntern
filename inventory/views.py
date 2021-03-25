@@ -10,7 +10,11 @@ from django.http import HttpResponseForbidden
 #Landing Page
 @login_required
 def listing(request):
-    products = Products.objects.filter(product_owner=request.user)
+    usertype = request.user.profile.usertype
+    if usertype == "User":
+        products = Products.objects.all()
+    else:
+        products = Products.objects.filter(product_owner=request.user)
     context = {
         'products':products,
         "title": "Products Listing | Konsultera"

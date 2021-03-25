@@ -12,7 +12,7 @@ def register(request):
             usertype = request.POST['usertype']
             user = form.save()
             Profile.objects.create (user=user,usertype=usertype)
-            messages.success(request, f'Your account has been sent for approval!')
+            messages.success(request, f'Hey {user.username}! Try logging in!')
             return redirect('login')
     else:
         form = UserRegisterForm()

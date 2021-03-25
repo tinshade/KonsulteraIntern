@@ -8,6 +8,10 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        del self.fields['password2']
 
 class ProfileRegisterForm(forms.ModelForm):
     class Meta:

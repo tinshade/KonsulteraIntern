@@ -1,1 +1,16 @@
-YOU HAVE BEEN LOGGED OUT
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<!-- LOGIN PAGE SECTION -->
+<section style="background: url('{% static 'images/loginbg.jpg' %}') no-repeat fixed center;">
+    <div class="container-fluid container-login100" >
+        <div class="container col-lg-4 col-md-4 col-sm-12 mt-5 text-center" style="background-color: white; box-shadow: 5px 5px 50px #333; border-radius: 15px; padding: 50px">
+            <div class="container">
+                <img src="{% static 'ogflame.png' %}" class="im-responsive" height="100px" width="100px" style="border-radius: 50%; border: 3px solid rgba(93,84,240,0.5)">
+            </div>
+            <h1 class="mt-5 header-main">YOU HAVE BEEN LOGGED OUT</h1>
+            <br>
+        </div>
+    </div>
+</section>
+{% endblock %}

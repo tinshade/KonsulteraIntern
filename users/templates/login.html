@@ -1,6 +1,28 @@
-<form class="lform" method="POST">
-    {% csrf_token %}
-    <input type="text" name="username" autofocus placeholder="Username" required class="form-control" id="id_username">
-    <input type="password" name="password" required placeholder="Enter your password" class="form-control" id="id_password">
-    <button class="btn" type="submit" title="Login to PYWarehouse">LOGIN</button>
-</form>
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<!-- LOGIN PAGE SECTION -->
+<section style="background: url('{% static 'images/loginbg.jpg' %}') no-repeat fixed center;">
+    <div class="container-fluid container-login100" >
+        <div class="container col-lg-4 col-md-4 col-sm-12 mt-5 mb-5 text-center" style="background-color: white; box-shadow: 5px 5px 50px #333; border-radius: 15px; padding: 50px">
+            <div class="container">
+                <img src="{% static 'ogflame.png' %}" class="im-responsive" height="100px" width="100px" style="border-radius: 50%; border: 3px solid rgba(93,84,240,0.5)">
+            </div>
+            <h1 class="mt-5" style="color: #333">LOGIN</h1>
+            <br>
+            <div class="container text-center">
+                <form class="lform" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="username" autofocus placeholder="Username" required class="form-control" id="id_username">
+                    <input type="password" name="password" required placeholder="Password" class="form-control" id="id_password">
+                    <button class="btn mt-5" type="submit" title="Login to Konsultera">LOGIN</button>
+                </form>
+                <br>
+                <hr>
+                <br>
+                <small><a href="{% url 'register' %}" title="Sign Up with us!">Need an account?</a></small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
