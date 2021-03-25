@@ -1,0 +1,6 @@
+<form class="lform" method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" autofocus placeholder="Username" required class="form-control" id="id_username">
+    <input type="password" name="password" required placeholder="Enter your password" class="form-control" id="id_password">
+    <button class="btn" type="submit" title="Login to PYWarehouse">LOGIN</button>
+</form>

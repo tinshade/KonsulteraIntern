@@ -1,0 +1,12 @@
+<form method="POST" enctype="multipart/form-data" class="form-controler">
+    {% csrf_token %}
+    {{ form }}
+    <select id="usertype" name="usertype">
+        <option value="User">User</option>
+        <option value="Admin">Administrator</option>
+    </select>
+    <div class="container mt-5 mb-5 text-center">
+        <button type="submit" class="btn btn-success">UPDATE</button>
+    </div>
+</form>
+#Abhishek98
