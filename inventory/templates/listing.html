@@ -9,12 +9,22 @@
 {% endif %}
 <a class='btn btn-info' href="{% url 'add_item' %}" title="Add a new product!">Add Product</a>
 <section id="listing_products">
+    
     {% for product in products %}
+    <h1>count : {{ forloop.counter }}</h1>
     {{product.product_name}}
     {{product.product_owner}}
     {{product.product_quantity}}
     {{product.product_price}}
     <img src={{product.product_image.url}}/>
+    <button 
+        data-product="{{product.pk}}" 
+        data-action="add" 
+        class="btn btn-outline-success rounded shadow bg-white text-black update-cart" 
+        title="Add to your cart"
+    >
+        Cart
+    </button>
     <a href="{% url 'edit_item' product.pk %}" title="edit">Edit</a>
     <a href="{% url 'delete_item' product.pk %}" title="delete">Delete</a>
     {% endfor %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+    <section id="cart">
+        {%for item in items%}
+        <div class="container p-5  mt-5 mb-5 border border-primary">
+            <label>Sr no.</label>
+            <h5>{{forloop.counter}}</h5>
+            <label>Image</label>
+            <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
+            <label>Name</label>
+            <h5>{{item.product.product_name}}</h5>
+            <label>Price</label>
+            <h5>{{item.product.product_price|floatformat:2}}</h5>
+            <label>Quantity</label>
+            <h5>{{item.quantity}}</h5>
+            <label>Total Price</label>
+            <h5 class="text-info">{{item.get_total|floatformat:2}}</h5>
+        </div>
+        <br/>
+        {%endfor%}
+        <div class="container p-5 mt-5 mb-5 border border-danger">
+        <label>Total Items</label>
+        <h5>{{orders.get_cart_items}}</h5>
+        <label>Grand Total</label>
+        <h5>{{orders.get_grand_total|floatformat:2}}</h5>
+        </div>
+    </section>
+{% endblock %}

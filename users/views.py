@@ -4,8 +4,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegisterForm,ProfileRegisterForm
 from .models import Profile
+
+
 #REGISTRATION PAGE
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('listing')
+    
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
