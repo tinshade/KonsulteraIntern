@@ -104,15 +104,14 @@
     </section>
     <!-- NAVBAR END -->
     <!-- SECTION FOR THE FLASH MESSAGES -->
-    <section id="messages" class="hvr-backward" style="position: absolute; right:0px; top: 50px; z-index: 2;">
-        {% if messages %}
-            {% for message in messages %}
-                <div style="width: fit-content;" class="alert ml-auto mt-3 alert-{{message.tags}}"></div>
-                    <span>{{message}}</span>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </section>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert mt-3 hvr-backward alert-{{message.tags}}"></div>
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     <!-- MAIN BLOCK START. -->
     <section id="main">
         {% block body %}

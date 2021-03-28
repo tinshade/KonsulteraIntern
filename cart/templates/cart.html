@@ -28,7 +28,7 @@
                 </thead>
                 <tbody id="items_cart">
                     {%for item in items%}
-                    <tr>
+                    <tr id="tr_{{forloop.counter}}">
                         <th scope="row">{{forloop.counter}}</th>
                         <td>
                             <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
@@ -37,28 +37,27 @@
                             {{item.product.product_name}}
                         </td>
                         <td>
-                            {{item.product.product_price|floatformat:2}}
+                            ₹{{item.product.product_price}}
                         </td>
-                        <td>
+                        <td id="availableQty_{{item.product.pk}}">
                             {{item.product.product_quantity}}
                         </td>
                         <td>
                             <input
                                 type="number"
-                                max={{item.product.product_quantity}}
-                                min=0
                                 value = {{item.quantity}}
-                                id = "qty_{{forloop.counter}}"
-                                onchange = "setValue(this.value, this.max, this.id)"
+                                max = {{item.product.product_quantity}}
+                                id = "qty_{{item.product.pk}}"
+                                onchange = "updateUserOrder( {{item.product.pk}}, 'custom', this.value)"
                             />
                         </td>
                         <td>
-                            {{item.get_total|floatformat:2}}
+                            ₹<span id="newTotal_{{item.product.pk}}">{{item.get_total}}</span>
                         </td>
                         <td>
-                            <a href="" title="Remove this item">
+                            <button class="btn remove-item" data-product="{{item.product.pk}}" data-counter="{{forloop.counter}}" title="Remove this item">
                                 <i class="fas fa-trash text-danger hvr-wobble-horizontal"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     {%endfor%}
@@ -67,17 +66,18 @@
             <div class="container-fluid d-flex mb-4 flex-row-reverse">
                 <div class="text-right hvr-underline-reveal px-3">
                     <small class="text-muted">Grand Total</small>
-                    <h5>₹{{orders.get_grand_total|floatformat:2}}</h5>
+                    <h5>₹<span id="grand_total">{{orders.get_grand_total}}</span></h5>
                 </div>
                 <div class="mx-4 text-right hvr-underline-reveal px-3">
                     <small class="text-muted">Total Items</small>
-                    <h5>{{orders.get_cart_items}}</h5>
+                    <h5 id="grand_items">{{orders.get_cart_items}}</h5>
                 </div>
             </div>
-            
-            <div class="pt-5 pb-3 border-top">
+            {% if orders.get_cart_items > 0 %}
+            <div id="checkout_div" class="pt-5 pb-3 border-top">
                 <button class="btn hvr-wobble-vertical float-right btn-outline-success">Proceed to Checkout</button>
             </div>
+            {%endif%}
         </div>
         <br/><br/><br/><br/>
     </section>

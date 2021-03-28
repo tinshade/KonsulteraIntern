@@ -39,8 +39,35 @@ def get_items(request):
     orderItem = OrderItem.objects.filter(ordered_by=order)
     items_in_cart = ""
     for each in orderItem:
-        items_in_cart+=str(each)
+        items_in_cart+=(str(each.product.pk)+"_")
     return JsonResponse({"cart_items":order.get_cart_items, "items": items_in_cart}, safe=False)
+
+
+#Delete Items in Cart
+@login_required
+def remove_item(request):
+    data = json.loads(request.body)
+    productId = data['productId']
+    response = {"dataFor":productId, "orderQty": None, "availableQty": None, "newTotal": None}
+    customer = request.user
+    product = Products.objects.get(pk=productId)
+    order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
+    orderItem, created = OrderItem.objects.get_or_create(ordered_by=order, product = product)
+    product.product_quantity = (product.product_quantity + orderItem.quantity)
+    product.save()
+    orderItem.delete()
+    response['orderQty'] = -1
+    response['availableQty'] = product.product_quantity
+    response['newTotal'] = float(orderItem.get_total)
+
+    context = {
+        "response": response,
+        "cart_items":order.get_cart_items,
+        "grand_total": float(order.get_grand_total)
+    }
+    return JsonResponse(context, safe=False)
+
+
 
 #Update Items in Cart
 @login_required
@@ -48,40 +75,48 @@ def update_item(request):
     data = json.loads(request.body)
     productId = data['productId']
     action = data['action']
-
-    orderItemStatus = {"status": None, "reason":""}
-    productInvStatus = {"status": None, "reason":""}
-
+    value = int(data['value'])
+    response = {"dataFor":productId, "orderQty": None, "availableQty": None, "newTotal": None}
     customer = request.user
     product = Products.objects.get(pk=productId)
     order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
     orderItem, created = OrderItem.objects.get_or_create(ordered_by=order, product = product)
 
     if action == 'add':
-        orderItem.quantity = (orderItem.quantity + 1)
+        orderItem.quantity = (orderItem.quantity)
         product.product_quantity = (product.product_quantity - 1)
-    elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
-        product.product_quantity = (product.product_quantity + 1)
+        product.save()
+        orderItem.save()
+        response['orderQty'] = orderItem.quantity
+        response['availableQty'] = product.product_quantity
+    elif action == 'custom':
+        #User chose to reduce items
+        if orderItem.quantity>value and value >= 0:
+            difference =  orderItem.quantity-value
+            orderItem.quantity = (orderItem.quantity - (difference))
+            product.product_remaining = (product.product_remaining + (difference))
+            product.save()
+            orderItem.save()
+            response['orderQty'] = orderItem.quantity
+            response['availableQty'] = product.product_remaining
+            response['newTotal'] = float(orderItem.get_total)
+        #User chose to add items
+        elif orderItem.quantity<value:
+            difference =  value-orderItem.quantity
+            orderItem.quantity = (orderItem.quantity + (difference))
+            product.product_remaining = (product.product_remaining - (difference))
+            product.save()
+            orderItem.save()
+            response['orderQty'] = orderItem.quantity
+            response['availableQty'] = product.product_remaining
+            response['newTotal'] = float(orderItem.get_total)
+        else:
+            pass
     else:
-        orderItem.quantity = (orderItem.quantity + 1)
-        product.product_quantity = (product.product_quantity - 1)
-
-    product.save()
-    orderItem.save()
-    if orderItem.quantity <= 0:
-        orderItem.delete()
-        orderItemStatus['status']:False
-        orderItemStatus['reason']:"Selected quantity reached zero."
-    
-    if product.product_quantity <= 0:
-        productInvStatus['status']:False
-        productInvStatus['reason']:"Inventory has ran out of items."
-
-
+        pass
     context = {
-        "orderItemStatus": orderItemStatus,
-        "productInvStatus": productInvStatus,
-        "cart_items":order.get_cart_items
+        "response": response,
+        "cart_items":order.get_cart_items,
+        "grand_total": float(order.get_grand_total)
     }
     return JsonResponse(context, safe=False)

@@ -7,5 +7,6 @@ urlpatterns = [
    path('item_details/item/', views.crud_product, name="add_item"),
    path('item_details/item/<int:pk>', views.crud_product, {}, 'edit_item'),
    path('delete_item/<int:pk>', views.delete_item,{},'delete_item'),
+   path('delete_admin_item/', views.delete_admin_item,{},'delete_admin_item'),
 
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -28,58 +28,115 @@
             {% endif %}
         </div>
         
-        <div class="row container-fluid border border-primary rounded shadow p-5 my-5">
-        {% for product in products %}
-        <div class="col-lg-5 col-sm-12 col-md-5 mx-auto my-5 p-3 rounded border border-primary">
-            <small >
-                {{forloop.counter}}
-            </small>
-            <div class="row px-4">
-                <div class="text-center col-lg-6 col-md-6 col-sm-12 py-3 px-4">
-                    <img src={{product.product_image.url}} style="height: 100px; width: 100px;" alt={{product.product_name}}/>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 pt-1 px-4 text-right magic-border">
-                    <h5 class="display-4 text-capitalize" style="font-size: 1.4em !important; font-weight: 400;">{{product.product_name}}</h5>
-                    <label><small>Price-per-unit:</small></label>
-                    <strong>Rs. {{product.product_price}} / unit</strong>
-                    <br/>
-                    <label><small>Available Quantity:</small></label>
-                    <strong>{{product.product_quantity}}</strong>
-                    <div class="mt-1">
-                        {% if user.profile.usertype == 'User' %}
-                        <button 
-                            id = "btn_{{product.pk}}"
-                            data-product="{{product.pk}}" 
-                            data-action="cart_add"
-                            class="btn btn-outline-success rounded shadow update-cart hvr-float" 
-                            title="Add to your cart"
-                        >
-                            Add to Cart
-                        </button>
-                        {% else %}
-                        <a 
-                            href="{% url 'edit_item' product.pk %}"
-                            title="Edit this item!"
-                            class="btn btn-outline-info rounded hvr-float" 
-                        >
-                        <i class="fas fa-pen"></i>
-                        </a>
-                        <a 
-                            href="{% url 'delete_item' product.pk %}"
-                            title="Delete this item!"
-                            class="btn btn-outline-danger rounded hvr-float" 
-                        >
-                            <i class="fas fa-trash"></i>
-                        </a>
+        <div class="container my-5 p-5 border border-success rounded shadow">
+            {% if products %}
+            <table class="table border table-hover" >
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Remaining</th>
+                        {% if user.profile.usertype == 'Admin' %}
+                        <th scope="col">Status</th>
                         {% endif %}
-                    </div>
-                </div>
-            </div>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="items_cart">
+                    
+                    {%for item in products%}
+                    <tr id="tr_{{forloop.counter}}">
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>
+                            <img height="100px" width="100px" src="{{item.product_image.url}}" alt={{item.product_name}} />
+                        </td>
+                        <td>
+                            {{item.product_name}}
+                        </td>
+                        <td>
+                            ₹{{item.product_price}}
+                        </td>
+                        <td>
+                            <span id="td_{{item.pk}}">{{item.product_remaining}}</span>
+                        </td>
+                        {% if user.profile.usertype == 'Admin' %}
+                        <td>
+                            {{item.product_status}}
+                        </td>
+                        {% endif %}
+                        <td>
+                            {% if user.profile.usertype == 'User' %}
+                                <button 
+                                    id = "btn_{{item.pk}}"
+                                    data-product="{{item.pk}}" 
+                                    data-action="add"
+                                    class="btn btn-outline-success rounded shadow update-cart hvr-float" 
+                                >
+                                    Add to Cart
+                                </button>
+                            {% else %}
+                                <a 
+                                    href="{% url 'edit_item' item.pk %}"
+                                    title="Edit this item!"
+                                    class="btn btn-outline-info rounded hvr-float" 
+                                >
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <button
+                                    data-product = {{item.pk}}
+                                    data-counter = {{forloop.counter}}
+                                    title="Delete this item!"
+                                    class="btn btn-outline-danger rounded hvr-float delete-item-admin" 
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {%endfor%}
+                    
+
+                </tbody>
+            </table>
+            {% else %}
+            <div class="container text-center">
+                <img src="{% static '/images/empty_cart.png' %}" alt="Empty inventory" class="img-fluid rounded-circle" height="50%" width="50%" />
+                <h1>No items in inventory</h1>
+            {% endif %}
         </div>
-        {% endfor %}
-        </div>
+        
     </div>
-    
+    <script>
+
+        let updateBtns = document.getElementsByClassName('update-cart')
+        for(let i=0; i<updateBtns.length; i++){
+            updateBtns[i].addEventListener('click', function(){
+                let productId = this.dataset.product
+                let action = this.dataset.action
+                if(action === "add"){
+                    let btnId = "btn_"+productId.toString()
+                    let currentBtn = document.getElementById(btnId);
+                    currentBtn.innerHTML = "ADDED"
+                    currentBtn.disabled = true
+                    let qtyLabel = document.getElementById("td_"+productId.toString())
+                    let current = parseInt(qtyLabel.innerHTML)
+                    qtyLabel.innerHTML = String(parseInt(current)-1)
+                }
+                updateUserOrder(productId, action)
+            })
+        }
+
+        let deleteAdminBtns = document.getElementsByClassName('delete-item-admin')
+        for(let i=0; i<deleteAdminBtns.length; i++){
+            deleteAdminBtns[i].addEventListener('click', function(){
+                let productId = this.dataset.product
+                let counter = this.dataset.counter
+                deleteItemAdmin(productId, counter)
+            })
+        }
+    </script>
     
 </section>
 {% endblock %}
