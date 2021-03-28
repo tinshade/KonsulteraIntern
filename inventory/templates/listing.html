@@ -20,7 +20,7 @@
     
     <div class="container-fluid p-5" id="listings">
         <div class="container-fluid d-flex my-4 mx-auto justify-content-between">
-            <span class="display-4 text-capitalize" style="font-size: 2em !important;">Welcome, <strong>{{user.username}}</strong></span>
+            <span class="display-4 text-capitalize" style="font-size: 2em !important;">Welcome!</strong></span>
             {% if user.profile.usertype == 'Admin' %}
             <a class='btn float-right btn-info hvr-wobble-vertical' style="border-radius: 50%;" href="{% url 'add_item' %}" title="Add a new product!">
                 <i class="fas fa-plus"></i>

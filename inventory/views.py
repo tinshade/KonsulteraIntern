@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import CRUDProductForm
 from .models import Products
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse
 import json
 
 #Landing Page
@@ -28,7 +28,7 @@ def crud_product(request, pk=None):
         title = "Edit Product | Konsultera"
         product = get_object_or_404(Products, pk=pk)
         if product.product_owner != request.user:
-            return HttpResponseForbidden()
+            return redirect('listing')
     else:
         title = "Add Products | Konsultera"
         product = Products(product_owner = request.user)

@@ -104,13 +104,16 @@
     </section>
     <!-- NAVBAR END -->
     <!-- SECTION FOR THE FLASH MESSAGES -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert mt-3 hvr-backward alert-{{message.tags}}"></div>
-                {{message}}
-            </div>
-        {% endfor %}
-    {% endif %}
+    
+    {% for message in messages %}
+        <div class="alert mt-3 alert-{{message.tags}}"></div>
+            {{message}}
+        </div>
+        <div class="alert alert-primary" role="alert">
+            This is a primary alert—check it out!
+        </div>
+    {% endfor %}
+    
     
     <!-- MAIN BLOCK START. -->
     <section id="main">

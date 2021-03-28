@@ -75,6 +75,11 @@ async function updateUserOrder(productId, action, value=0){
             document.getElementById('newTotal_'+String(data.response.dataFor)).innerHTML = data.response.newTotal;
             document.getElementById('grand_total').innerHTML = data.grand_total;
             document.getElementById('grand_items').innerHTML = data.cart_items
+            if(data.cart_items === 0){
+                document.getElementById('checkout_div').style.display = "none"
+            }else{
+                document.getElementById('checkout_div').style.display = "inherit"
+            }
         }
     });
 }

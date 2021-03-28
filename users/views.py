@@ -2,10 +2,14 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+#from django.contrib.auth.models import User
+
 from .forms import UserRegisterForm,ProfileRegisterForm
 from .models import Profile
-
-
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth import get_user_model
+User = get_user_model()
 #REGISTRATION PAGE
 def register(request):
     if request.user.is_authenticated:
@@ -17,7 +21,7 @@ def register(request):
             usertype = request.POST['usertype']
             user = form.save()
             Profile.objects.create (user=user,usertype=usertype)
-            messages.success(request, f'Hey {user.username}! Try logging in!')
+            messages.success(request, f'Hey! Try logging in!')
             return redirect('login')
     else:
         form = UserRegisterForm()

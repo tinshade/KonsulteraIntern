@@ -11,16 +11,17 @@
             <h1 class="mt-5" style="color: #333">LOGIN</h1>
             <br>
             <div class="container text-center">
-                <form class="lform" method="POST">
+                <form class="form-controler text-left" method="POST">
+                    {{form}}
                     {% csrf_token %}
-                    <input type="text" name="username" autofocus placeholder="Username" required class="form-control" id="id_username">
-                    <input type="password" name="password" required placeholder="Password" class="form-control" id="id_password">
-                    <button class="btn mt-5" type="submit" title="Login to Konsultera">LOGIN</button>
+                    <div class="lform text-center">
+                        <button class="btn mt-5" type="submit" title="Login to Konsultera">LOGIN</button>
+                    </div>
                 </form>
                 <br>
                 <hr>
                 <br>
-                <small><a href="{% url 'register' %}" title="Sign Up with us!">Need an account?</a></small>
+                <small><a href="{% url 'register' %}" title="Sign Up with us!">Sign Up</a></small>
             </div>
         </div>
     </div>
