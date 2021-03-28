@@ -1,11 +1,30 @@
-<form method="POST" enctype="multipart/form-data" class="form-controler">
-    {% csrf_token %}
-    {{ form }}
-    <select id="usertype" name="usertype">
-        <option value="User">User</option>
-        <option value="Admin">Administrator</option>
-    </select>
-    <div class="container mt-5 mb-5 text-center">
-        <button type="submit" class="btn btn-success">UPDATE</button>
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<!-- LOGIN PAGE SECTION -->
+<section style="background: url('{% static 'images/loginbg.jpg' %}') no-repeat fixed center;">
+    <div class="container-fluid container-login100" >
+        <div class="container col-lg-8 col-md-8 col-sm-12 mt-5 mb-5 text-center" style="background-color: white; box-shadow: 5px 5px 50px #333; border-radius: 15px; padding: 50px">
+            <div class="container">
+                <img src="{% static 'ogflame.png' %}" class="im-responsive" height="100px" width="100px" style="border-radius: 50%; border: 3px solid rgba(93,84,240,0.5)">
+            </div>
+            <h1 class="mt-5" style="color: #333">REGISTER</h1>
+            <br>
+            <div class="container text-center">
+                <form method="POST" enctype="multipart/form-data" class="form-controler text-left">
+                    {% csrf_token %}
+                    {{ form }}
+                    <label>User Type</label>
+                    <select id="usertype" name="usertype">
+                        <option value="User">User</option>
+                        <option value="Admin">Administrator</option>
+                    </select>
+                    <div class="container mt-5 mb-5 text-right">
+                        <button type="submit" class="btn btn-outline-success" style="font-weight: 500">REGISTER</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
+</section>
+{% endblock %}

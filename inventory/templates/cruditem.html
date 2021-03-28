@@ -1,13 +1,38 @@
-<form method="POST" enctype="multipart/form-data" class="form-controler">
-    {% csrf_token %}
-    {{ form }}
-    <h1>{{title}}</h1>
-    {% if pk %}
-    <button type="submit" class="btn btn-primary">EDIT</button>
-    <a href="{% url 'delete_item' pk %}"> delete</a>
-    
-    {%else%}
-    <button type="submit" class="btn btn-primary">ADD</button>
-    {%endif%}
-</form>
-    
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<section id="addItemForm" class="text-center">
+    <div class="jumbotron jumbotron-fluid container-login100">
+        <div class="container">
+            <h1 class="display-1">
+            {% if pk %}
+                Edit Product
+            {% else %}
+                Add Product
+            {% endif %}
+            </h1>
+            <p class="lead">Add items to your inventory</p>
+            <br/><br/>
+            <a href="#crudform" class="p-3 hrv-glow bg-white" style="border-radius: 50%;" title="Proceed to adding items!">
+                <i class="fas fa-chevron-down p-2"></i>
+            </a>
+        </div>
+    </div>
+    <form method="POST" id="crudform" enctype="multipart/form-data" class="form-controler shadow p-5 rounded mx-auto col-lg-7 col-md-7 col-sm-12 border border-primary" style="margin-bottom: 15%; text-align: left">
+        {% csrf_token %}
+        {{ form }}
+        <div class="mt-5 mb-3 d-flex flex-row-reverse justify-content-between">
+            {% if pk %}
+            <button type="submit" class="btn btn-outline-info rounded shadow hvr-float">EDIT</button>
+            <a href="{% url 'delete_item' pk %}" title="Delete This Item" class="btn btn-outline-danger rounded shadow hvr-float">Delete</a>
+            {%else%}
+            <button type="submit" class="btn btn-outline-success rounded shadow hvr-float">ADD</button>
+            {%endif%}
+        </div>
+        
+    </form>
+</section>
+<script>
+    document.getElementById('id_product_price').min = 0;
+</script>
+{%endblock%}

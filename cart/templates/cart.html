@@ -1,29 +1,84 @@
 {% extends 'base.html' %}
 {% block body %}
 {% load static %}
-    <section id="cart">
-        {%for item in items%}
-        <div class="container p-5  mt-5 mb-5 border border-primary">
-            <label>Sr no.</label>
-            <h5>{{forloop.counter}}</h5>
-            <label>Image</label>
-            <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
-            <label>Name</label>
-            <h5>{{item.product.product_name}}</h5>
-            <label>Price</label>
-            <h5>{{item.product.product_price|floatformat:2}}</h5>
-            <label>Quantity</label>
-            <h5>{{item.quantity}}</h5>
-            <label>Total Price</label>
-            <h5 class="text-info">{{item.get_total|floatformat:2}}</h5>
+    <section>
+        <div class="jumbotron jumbotron-fluid text-center container-login100">
+            <div class="container">
+                <h1 class="display-1"> Your Cart </h1>
+                <p class="lead">Manage your cart &amp; checkout!</p>
+                <br/><br/>
+                <a href="#items_cart" class="p-3 hrv-glow bg-white" style="border-radius: 50%;">
+                    <i class="fas fa-chevron-down p-2"></i>
+                </a>
+            </div>
         </div>
-        <br/>
-        {%endfor%}
-        <div class="container p-5 mt-5 mb-5 border border-danger">
-        <label>Total Items</label>
-        <h5>{{orders.get_cart_items}}</h5>
-        <label>Grand Total</label>
-        <h5>{{orders.get_grand_total|floatformat:2}}</h5>
+        <div class="container my-5 p-5 border border-success rounded shadow">
+            <table class="table border table-hover" >
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Available</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="items_cart">
+                    {%for item in items%}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>
+                            <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
+                        </td>
+                        <td>
+                            {{item.product.product_name}}
+                        </td>
+                        <td>
+                            {{item.product.product_price|floatformat:2}}
+                        </td>
+                        <td>
+                            {{item.product.product_quantity}}
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                max={{item.product.product_quantity}}
+                                min=0
+                                value = {{item.quantity}}
+                                id = "qty_{{forloop.counter}}"
+                                onchange = "setValue(this.value, this.max, this.id)"
+                            />
+                        </td>
+                        <td>
+                            {{item.get_total|floatformat:2}}
+                        </td>
+                        <td>
+                            <a href="" title="Remove this item">
+                                <i class="fas fa-trash text-danger hvr-wobble-horizontal"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <div class="container-fluid d-flex mb-4 flex-row-reverse">
+                <div class="text-right hvr-underline-reveal px-3">
+                    <small class="text-muted">Grand Total</small>
+                    <h5>₹{{orders.get_grand_total|floatformat:2}}</h5>
+                </div>
+                <div class="mx-4 text-right hvr-underline-reveal px-3">
+                    <small class="text-muted">Total Items</small>
+                    <h5>{{orders.get_cart_items}}</h5>
+                </div>
+            </div>
+            
+            <div class="pt-5 pb-3 border-top">
+                <button class="btn hvr-wobble-vertical float-right btn-outline-success">Proceed to Checkout</button>
+            </div>
         </div>
+        <br/><br/><br/><br/>
     </section>
 {% endblock %}

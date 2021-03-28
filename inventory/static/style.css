@@ -6,15 +6,18 @@
 
 html{
     font-family: 'Montserrat', sans-serif;
+    scroll-behavior: smooth;
 }
 
 *{
     margin:0px;
     padding:0px;
 }
-html,body{
-    scroll-behavior: smooth;
-}
+
+.shadow{
+    box-shadow: 8px 8px 20px lightblue;
+  }
+
 @font-face {
     font-family: 'Bryndan_White';
     src: local('pyoff'),
@@ -28,7 +31,7 @@ html,body{
 .inpdes{
     width: 100%;
     text-decoration: none;
-    color: #44aeff;
+    color: #8216c5;
     border: none;
     border-radius: 5px;
     padding-left: 20px;
@@ -45,7 +48,7 @@ video {
 textarea{
     width: 100%;
     text-decoration: none;
-    color: #44aeff;
+    color: #8216c5;
     border-radius: 5px;
     padding-left: 20px;
     padding: 10px; 
@@ -60,33 +63,34 @@ textarea{
 .form-controler input{
     width: 100%;
     text-decoration: none;
-    color: #44aeff;
-    border: none;
+    color: #8216c5;
+    border: 1px solid lightblue;
     border-radius: 5px;
     padding-left: 20px;
     padding: 10px; 
     height: 45px;
-    box-shadow: 0px 1px 15px gray;
+    font-weight: 500;
+    /* box-shadow: 0px 1px 15px gray; */
     outline: none !important;
 }
 
 .form-controler select{
     width: 100%;
     text-decoration: none;
-    color: #44aeff;
-    border: none;
+    color: #8216c5;
+    border: 1px solid lightblue;
     border-radius: 5px;
     padding-left: 20px;
     padding: 10px; 
     height: 45px;
-    box-shadow: 0px 1px 15px gray;
+    /* box-shadow: 0px 1px 15px gray; */
     outline: none !important;
 }
 
 .form-controler input[type=checkbox]{
     padding-left: 0px;
     padding: 0px;
-    color: #44aeff;
+    color: #8216c5;
     border: none;
     border-radius: 15px;
     height: 15px;
@@ -98,7 +102,7 @@ textarea{
 .form-controler textarea{
     width: 100%;
     text-decoration: none;
-    color: #44aeff;
+    color: #8216c5;
     border: none;
     border-radius: 5px;
     padding-left: 20px;
@@ -112,7 +116,7 @@ textarea{
 .form-controler label{
     width: 100%;
     margin-top: 15px;
-    font-size: 20px;
+    font-size: 0.9em;
     text-align: left;
 }
 .form-controler ul{
@@ -139,7 +143,8 @@ hr{
 
 /*CUSTOM SCROLLBAR*/
 ::-webkit-scrollbar{
-	width: 10px;
+	width: 4px;
+    background-color: transparent;
 }
 ::-webkit-scrollbar-track{
 	background-color: transparent;
@@ -155,12 +160,14 @@ hr{
 
 /*CUSTOM SELECTION TEXT*/
 ::-moz-selection {
-	background: rgba(4, 190, 207, 0.6);
-	color: white;
+	background: rgba(4, 190, 207, 0.1);
+	mix-blend-mode: difference;
+
 }
 ::selection {
-	background: rgba(4, 190, 207, 0.6);
-	color: white;
+	background: rgba(4, 190, 207, 0.1);
+	mix-blend-mode: difference;
+
 }
 
 .lightdiv{
@@ -291,4 +298,89 @@ img{
 }
 .alert{
     margin-bottom: 0px;
+}
+
+
+.cart-n-number{
+    display: flex;
+    position: relative;
+}
+.cart-n-number:hover{
+    background-color:#d99fe0;
+}
+.cart-n-number:hover span{
+    color:#c145d1;
+    background-color:white;
+}
+.cart-n-number:hover i{
+    color:#c145d1;
+    background-color:transparent;
+}
+.cart-n-number i{
+    position: absolute;
+    top:-10px;
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    font-size: 1.5em;
+}
+.cart-n-number span{
+    position: absolute;
+    top:-24px;
+    left:40px;
+    background-color:#c145d1;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.79em;
+}
+
+.quantity {
+    position: relative;
+  }
+  
+.quantity input {
+    border:none;
+    outline:none;
+    padding: 0px 30px ;
+    font-weight: 500;
+    border: 1px solid #eee;
+}
+
+.quantity:focus input {
+    outline: none
+}
+
+.td{
+    text-align: center !important;
+}
+  
+/* MOBILE */
+@media only screen and (max-width: 1100px){
+    .cart-n-number{
+        display:none;
+    }
+    .only-cart{
+        display:inherit;
+    }
+    .magic-border{
+        border-left: none;
+        border-top: 1px solid lightblue;
+    }
+}
+
+/* DESKTOP */
+@media only screen and (min-width: 1100px){
+    .cart-n-number{
+        display:flex;
+    }
+    .only-cart{
+        display:none;
+    }
+    .magic-border{
+        border-top: none;
+        border-left: 1px solid lightblue;
+    }
 }
