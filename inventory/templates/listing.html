@@ -7,7 +7,7 @@
         <div class="container">
             <h1 class="display-1"> Product Listing </h1>
             {% if user.profile.usertype == 'User' %}
-                <p class="lead">Browse for products and make your cart!</p>
+                <p class="lead">Browse for products &amp; make your cart!</p>
             {% else %}
                 <p class="lead">Manage your inventory</p>
             {% endif %}
@@ -19,18 +19,18 @@
     </div>
     
     <div class="container-fluid p-5" id="listings">
-        <div class="container-fluid d-flex my-4 mx-auto justify-content-between">
-            <span class="display-4 text-capitalize" style="font-size: 2em !important;">Welcome!</strong></span>
+        <div class="container-fluid d-flex my-4 justify-content-between">
+            <h4 class="text-capitalize">Inventory</h4>
             {% if user.profile.usertype == 'Admin' %}
-            <a class='btn float-right btn-info hvr-wobble-vertical' style="border-radius: 50%;" href="{% url 'add_item' %}" title="Add a new product!">
-                <i class="fas fa-plus"></i>
-            </a>
+            <a class='btn float-right btn-outline-info rounded-circle hvr-wobble-vertical' href="{% url 'add_item' %}" title="Add a new product!">
+               <i class="fas fa-plus"></i>
+            </a>            
             {% endif %}
         </div>
         
-        <div class="container my-5 p-5 border border-success rounded shadow">
+        <div class="table-responsive rounded">
             {% if products %}
-            <table class="table border table-hover" >
+            <table class="table border shadow px-2 text-center table-hover" >
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">#</th>
@@ -45,7 +45,6 @@
                     </tr>
                 </thead>
                 <tbody id="items_cart">
-                    
                     {%for item in products%}
                     <tr id="tr_{{forloop.counter}}">
                         <th scope="row">{{forloop.counter}}</th>
@@ -96,20 +95,31 @@
                         </td>
                     </tr>
                     {%endfor%}
-                    
-
                 </tbody>
             </table>
+            {% if user.profile.usertype == 'User' %}
+            <div class="container-fluid text-right my-3">
+                <a href="{% url 'cart' %}"  class="btn btn-outline-primary hvr-forward" title="Proceed to cart">
+                    Proceed To Cart
+                    &nbsp;
+                    <i style="font-size: 0.7em;" class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            {% endif %}
             {% else %}
             <div class="container text-center">
                 <img src="{% static '/images/empty_cart.png' %}" alt="Empty inventory" class="img-fluid rounded-circle" height="50%" width="50%" />
-                <h1>No items in inventory</h1>
+                <h3>Want To Add Some Products?</h3>
+                <a href="{% url 'add_item' %}" title="Add New Products" class="btn mt-2 hvr-wobble-vertical btn-outline-info" >
+                    Add Products
+                </a>
+            <div>
             {% endif %}
         </div>
         
+        <br/><br/><br/><br/><br/>
     </div>
     <script>
-
         let updateBtns = document.getElementsByClassName('update-cart')
         for(let i=0; i<updateBtns.length; i++){
             updateBtns[i].addEventListener('click', function(){

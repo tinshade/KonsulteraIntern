@@ -128,6 +128,25 @@ function deleteItemAdmin(productId, counter){
     .then((data)=>{
         console.log(data)
         if(data.status === 200)
-        document.getElementById('div_'+String(counter)).style.display = 'none';
+        document.getElementById('tr_'+String(counter)).style.display = 'none';
+    })
+}
+
+
+async function checkout(customer){
+    const checkout_url = '/cart/checkout/'
+    await fetch(checkout_url, {
+        method: "POST",
+        headers:{
+            "Content-Type":'application/json',
+            'X-CSRFToken' : csrftoken,
+        },
+        body: JSON.stringify({'customer': customer})
+    })
+    .then((response)=>{
+        return response.json();
+    })
+    .then((data)=>{
+        console.log(data);
     })
 }

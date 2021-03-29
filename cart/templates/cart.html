@@ -5,80 +5,102 @@
         <div class="jumbotron jumbotron-fluid text-center container-login100">
             <div class="container">
                 <h1 class="display-1"> Your Cart </h1>
-                <p class="lead">Manage your cart &amp; checkout!</p>
+                <p class="lead">Manage Your Cart</p>
                 <br/><br/>
                 <a href="#items_cart" class="p-3 hrv-glow bg-white" style="border-radius: 50%;">
                     <i class="fas fa-chevron-down p-2"></i>
                 </a>
             </div>
         </div>
-        <div class="container my-5 p-5 border border-success rounded shadow">
-            <table class="table border table-hover" >
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Available</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="items_cart">
-                    {%for item in items%}
-                    <tr id="tr_{{forloop.counter}}">
-                        <th scope="row">{{forloop.counter}}</th>
-                        <td>
-                            <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
-                        </td>
-                        <td>
-                            {{item.product.product_name}}
-                        </td>
-                        <td>
-                            ₹{{item.product.product_price}}
-                        </td>
-                        <td id="availableQty_{{item.product.pk}}">
-                            {{item.product.product_remaining}}
-                        </td>
-                        <td>
-                            <input
-                                type="number"
-                                value = {{item.quantity}}
-                                max = {{item.product.product_quantity}}
-                                id = "qty_{{item.product.pk}}"
-                                onchange = "updateUserOrder( {{item.product.pk}}, 'custom', this.value)"
-                            />
-                        </td>
-                        <td>
-                            ₹<span id="newTotal_{{item.product.pk}}">{{item.get_total}}</span>
-                        </td>
-                        <td>
-                            <button class="btn remove-item" data-product="{{item.product.pk}}" data-counter="{{forloop.counter}}" title="Remove this item">
-                                <i class="fas fa-trash text-danger hvr-wobble-horizontal"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table>
-            <div class="container-fluid d-flex mb-4 flex-row-reverse">
-                <div class="text-right hvr-underline-reveal px-3">
-                    <small class="text-muted">Grand Total</small>
-                    <h5>₹<span id="grand_total">{{orders.get_grand_total}}</span></h5>
+        <div class="container-fluid px-5">
+            {%if items%}
+            <div class="my-5 table-responsive rounded">
+                <div class="my-3 container-fluid text-left">
+                    <a href="{% url 'listing' %}" title="Back to browsing" class="btn btn-outline-info hvr-backward">
+                        <i class="fas fa-arrow-left"></i>
+                        &nbsp;
+                        Back To Inventory
+                    </a>
                 </div>
-                <div class="mx-4 text-right hvr-underline-reveal px-3">
-                    <small class="text-muted">Total Items</small>
-                    <h5 id="grand_items">{{orders.get_cart_items}}</h5>
+                <table class="text-center px-2 table border table-hover" >
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Available</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items_cart">
+                        {%for item in items%}
+                        <tr id="tr_{{forloop.counter}}">
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>
+                                <img height="100px" width="100px" src="{{item.product.product_image.url}}" alt={{item.product.product_name}} />
+                            </td>
+                            <td>
+                                {{item.product.product_name}}
+                            </td>
+                            <td>
+                                ₹{{item.product.product_price}}
+                            </td>
+                            <td id="availableQty_{{item.product.pk}}">
+                                {{item.product.product_remaining}}
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value = {{item.quantity}}
+                                    max = {{item.product.product_quantity|add:1}}
+                                    id = "qty_{{item.product.pk}}"
+                                    class="form-control"
+                                    onchange = "updateUserOrder( {{item.product.pk}}, 'custom', this.value)"
+                                />
+                            </td>
+                            <td>
+                                ₹<span id="newTotal_{{item.product.pk}}">{{item.get_total}}</span>
+                            </td>
+                            <td>
+                                <button class="btn remove-item" data-product="{{item.product.pk}}" data-counter="{{forloop.counter}}" title="Remove this item">
+                                    <i class="fas fa-trash text-danger hvr-wobble-horizontal"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                <div class="container-fluid d-flex mb-4 border border-success py-3 flex-row-reverse">
+                    <div class="text-right hvr-underline-reveal px-3">
+                        <small class="text-muted">Grand Total</small>
+                        <h5>₹<span id="grand_total">{{orders.get_grand_total}}</span></h5>
+                    </div>
+                    <div class="mx-4 text-right hvr-underline-reveal px-3">
+                        <small class="text-muted">Total Items</small>
+                        <h5 id="grand_items">{{orders.get_cart_items}}</h5>
+                    </div>
                 </div>
+                {% if orders.get_cart_items > 0 %}
+                <hr/>
+                <div id="checkout_div" class="pt-5 text-center pb-3">
+                    <a href="{% url 'checkout' %}" class="btn hvr-wobble-vertical btn-outline-success">Proceed to Checkout</a>
+                </div>
+                {%endif%}
             </div>
-            {% if orders.get_cart_items > 0 %}
-            <div id="checkout_div" class="pt-5 pb-3 border-top">
-                <button class="btn hvr-wobble-vertical float-right btn-outline-success">Proceed to Checkout</button>
-            </div>
+            {%else%}
+            <div class="container text-center my-5 py-5" id="items_cart">
+                <img src="{% static '/images/empty_cart_user.png' %}" alt="Empty inventory" class="img-fluid rounded-circle" height="50%" width="50%" />
+                <h3>Want To Browse Some Products?</h3>
+                <a href="{% url 'listing' %}" title="Browse Some Products" class="btn mt-2 hvr-wobble-vertical btn-outline-info" >
+                    Start Shopping
+                </a>
+            <div>
             {%endif%}
-        </div>
-        <br/><br/><br/><br/>
+            <br/><br/><br/><br/>
+        </div>        
     </section>
 {% endblock %}
+

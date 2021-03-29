@@ -52,7 +52,6 @@ def crud_product(request, pk=None):
 def delete_item(request,pk):
     Products.objects.filter(id=pk).delete()
     messages.success(request, "Product was deleted successfully!")
-    #items = Products.objects.filter(product_owner=request.user)
     return redirect('listing')
 
 

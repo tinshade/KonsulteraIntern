@@ -4,18 +4,19 @@ from django.http import JsonResponse
 from .models import Cart,OrderItem
 from inventory.models import Products
 import json
-
+from django.contrib import messages
 
 #Cart Details
 @login_required
 def cart(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.profile.usertype == 'User':         
         customer = request.user
         order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
         items = order.orderitem_set.all()
     else:
         items = []
         order = {'get_grand_total':0, 'get_cart_items': 0}
+        return redirect('listing')
     
     context = {
         "title": "Your Cart | Konsultera",
@@ -25,14 +26,37 @@ def cart(request):
     return render(request, 'cart.html', context)
 
 #Checkout function
+@login_required
 def checkout(request):
-    context =  {
-        {"title": 'Checkout Order | Konsultera'},
-    }
-    return render(request, 'checkout.html', context)
+    customer = request.user
+    order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
+    orderItem = OrderItem.objects.filter(ordered_by=order)
+    for item in orderItem:
+        product = Products.objects.get(pk=item.product.pk)
+        if item.quantity > product.product_quantity:
+            messages.warning(request,"One or more items exceed available quantity!")
+            return redirect('listing')
+
+    for item in orderItem:
+        if(item.quantity<product.product_quantity):
+            product.product_quantity = item.product.product_remaining
+            product.save()
+            orderItem.delete()
+        elif(item.quantity==product.product_quantity):
+            product.product_quantity = item.product.product_remaining
+            product.product_status = "Inactive"
+            product.save()
+            orderItem.delete()
+        else:
+            messages.warning(request,"One or more items exceed available quantity!")
+            return redirect('listing')
+    
+    messages.success(request, f'Your order was completed successfully!')
+    return redirect('listing')
 
 
 #Get inital cart
+@login_required
 def get_items(request):
     customer = request.user
     order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
@@ -53,11 +77,11 @@ def remove_item(request):
     product = Products.objects.get(pk=productId)
     order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
     orderItem, created = OrderItem.objects.get_or_create(ordered_by=order, product = product)
-    product.product_quantity = (product.product_quantity + orderItem.quantity)
+    product.product_remaining = (product.product_remaining + orderItem.quantity)
     product.save()
     orderItem.delete()
     response['orderQty'] = -1
-    response['availableQty'] = product.product_quantity
+    response['availableQty'] = product.product_remaining
     response['newTotal'] = float(orderItem.get_total)
 
     context = {
@@ -82,13 +106,14 @@ def update_item(request):
     order, created = Cart.objects.get_or_create(customer=customer, order_status=False)
     orderItem, created = OrderItem.objects.get_or_create(ordered_by=order, product = product)
 
+    #Only available in User Listing; Adds one unit of the item to user's cart
     if action == 'add':
         orderItem.quantity = (orderItem.quantity)
-        product.product_quantity = (product.product_quantity - 1)
+        product.product_remaining = (product.product_remaining - 1)
         product.save()
         orderItem.save()
-        response['orderQty'] = orderItem.quantity
-        response['availableQty'] = product.product_quantity
+    
+    #Only available in Cart; Adds input amount of units to the user's cart 
     elif action == 'custom':
         #User chose to reduce items
         if orderItem.quantity>value and value >= 0:
@@ -97,9 +122,6 @@ def update_item(request):
             product.product_remaining = (product.product_remaining + (difference))
             product.save()
             orderItem.save()
-            response['orderQty'] = orderItem.quantity
-            response['availableQty'] = product.product_remaining
-            response['newTotal'] = float(orderItem.get_total)
         #User chose to add items
         elif orderItem.quantity<value:
             difference =  value-orderItem.quantity
@@ -107,13 +129,21 @@ def update_item(request):
             product.product_remaining = (product.product_remaining - (difference))
             product.save()
             orderItem.save()
-            response['orderQty'] = orderItem.quantity
-            response['availableQty'] = product.product_remaining
-            response['newTotal'] = float(orderItem.get_total)
+        #When Input exceeds items in stock
+        elif (value+product.product_remaining) > product.product_quantity:
+            orderItem.quantity = product.product_remaining
+            orderItem.save()
+            product.product_remaining = 0
+            product.save()
+            
         else:
             pass
     else:
         pass
+
+    response['orderQty'] = orderItem.quantity
+    response['availableQty'] = product.product_remaining
+    response['newTotal'] = float(orderItem.get_total)
     context = {
         "response": response,
         "cart_items":order.get_cart_items,
