@@ -19,7 +19,7 @@ A Django based inventory management system with multiple user roles and asynchro
 
 
 ## Screenshots
-![SS1](https://raw.githubusercontent.com/tinshade/KonsulteraIntern/main/SS/1.png "Login Page")
+![SS1](https://raw.githubusercontent.com/tinshade/KonsulteraIntern/main/SS/1.PNG?token=AFKHG7BXDTJX527TSZCBVKDAMGTCW "Login Page")
 ![SS2](https://raw.githubusercontent.com/tinshade/KonsulteraIntern/main/SS/2.png "Register Page")
 ![SS3](https://raw.githubusercontent.com/tinshade/KonsulteraIntern/main/SS/3.png "User Item Listing Page")
 ![SS4](https://raw.githubusercontent.com/tinshade/KonsulteraIntern/main/SS/4.png "Admin Item Listing Page")
